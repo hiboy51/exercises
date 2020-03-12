@@ -1,10 +1,11 @@
 /*
  * @Author: Kinnon.Z
  * @Date: 2020-03-12 14:34:11
- * @Last Modified by:   Kinnon.Z
- * @Last Modified time: 2020-03-12 14:34:11
+ * @Last Modified by: Kinnon.Z
+ * @Last Modified time: 2020-03-12 22:29:03
  */
-import { ArrayUtils } from "../../ArrayUtils";
+import { ArrayUtils } from "../../array_utils";
+import { Tree, EmptyTree } from "../../tree";
 
 class Concert {
     private readonly singerSize: number = 5;
@@ -13,14 +14,31 @@ class Concert {
 
     public output() {
         let crossex = this._generateData();
-        console.log(crossex);
-        console.log("============================");
-        let result = this._listCombination(crossex);
-        let realResult: number[][] = result.map((each: any[]) =>
-            ArrayUtils.flat(each).sort((a, b) => a - b)
+        console.log(
+            JSON.stringify(
+                crossex.map(each => {
+                    let [concert, conflict] = each;
+                    return `${concert} 号演唱会与 [${(conflict as Number[]).join(
+                        ","
+                    )}] 号演唱会冲突`;
+                }),
+                null,
+                "\t"
+            )
         );
-        console.log(JSON.stringify(realResult));
-        let uniqueResult = ArrayUtils.unique(realResult, (a, b) => {
+        console.log("============================");
+        let result = this._genCombinationTree(crossex);
+        let allEnds = result
+            .allLeafs()
+            .map(each => each.pathToRoot())
+            .map(each =>
+                each
+                    .map(e => e.value)
+                    .reverse()
+                    .slice(1)
+            );
+
+        let uniqueResult = ArrayUtils.unique(allEnds, (a, b) => {
             if (a.length != b.length) {
                 return false;
             }
@@ -50,9 +68,10 @@ class Concert {
         return crossex;
     }
 
-    private _listCombination(crosses: any[]) {
+    private _genCombinationTree(crosses: any[], root: Tree = Tree.of(999)) {
         if (crosses.length == 0) {
-            return [];
+            root.appendBranch(Tree.empty());
+            return root;
         }
         //* 先挑选一个和其他交集最少的集合
         let sortedCrosses = crosses
@@ -82,9 +101,12 @@ class Concert {
                 }
                 return true;
             });
-            return [idx, ...this._listCombination(remains)];
+            let newTree = Tree.of(idx);
+            this._genCombinationTree(remains, newTree);
+            return newTree;
         });
-        return result;
+        result.forEach(tr => root.appendBranch(tr));
+        return root;
     }
 }
 
