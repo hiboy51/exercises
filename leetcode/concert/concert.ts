@@ -1,3 +1,9 @@
+/*
+ * @Author: Kinnon.Z
+ * @Date: 2020-03-12 14:34:11
+ * @Last Modified by:   Kinnon.Z
+ * @Last Modified time: 2020-03-12 14:34:11
+ */
 import { ArrayUtils } from "../../ArrayUtils";
 
 class Concert {
