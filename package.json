@@ -1,0 +1,22 @@
+{
+  "name": "code_runnder",
+  "version": "1.0.0",
+  "description": "一些练习题",
+  "main": "run_typescript.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hiboy51/exercises.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hiboy51/exercises/issues"
+  },
+  "homepage": "https://github.com/hiboy51/exercises#readme",
+  "devDependencies": {
+    "ts-node": "^8.6.2"
+  }
+}
