@@ -2,10 +2,10 @@
  * @Author: Kinnon.Z
  * @Date: 2020-03-12 14:34:11
  * @Last Modified by: Kinnon.Z
- * @Last Modified time: 2020-03-12 22:29:03
+ * @Last Modified time: 2020-03-13 16:49:23
  */
 import { ArrayUtils } from "../../array_utils";
-import { Tree, EmptyTree } from "../../tree";
+import { Tree } from "../../tree";
 
 class Concert {
     private readonly singerSize: number = 5;
