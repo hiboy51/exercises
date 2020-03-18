@@ -20,7 +20,6 @@ Object.defineProperty(prototype, "duplicate", {
     value: funcDumplicate,
     writable: false
 });
-
 // test
 const b = [1, 1, 2, 2, 3, 4, 3];
 let countb = b["duplicate"](3);
