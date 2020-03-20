@@ -22,11 +22,22 @@
     "@babel/register": "^7.8.6",
     "commander": "^5.0.0",
     "gulp": "^4.0.2",
+    "gulp-debug": "^4.0.0",
+    "gulp-error-handle": "^1.0.1",
+    "gulp-load-plugins": "^2.0.2",
+    "gulp-unzip": "^1.1.0",
     "ts-node": "^8.6.2"
   },
   "dependencies": {
     "@types/commander": "^2.12.2",
+    "@types/del": "^4.0.0",
     "@types/gulp": "^4.0.6",
-    "@types/node": "^13.9.1"
+    "@types/gulp-load-plugins": "0.0.31",
+    "@types/minimatch": "^3.0.3",
+    "@types/node": "^13.9.1",
+    "@types/vinyl-paths": "0.0.31",
+    "del": "^5.1.0",
+    "minimatch": "^3.0.4",
+    "vinyl-paths": "^3.0.1"
   }
 }
