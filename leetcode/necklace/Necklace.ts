@@ -2,7 +2,7 @@
  * @Author: Kinnon.Z
  * @Date: 2020-04-13 10:01:43
  * @Last Modified by: Kinnon.Z
- * @Last Modified time: 2020-04-13 12:24:34
+ * @Last Modified time: 2020-04-13 12:29:11
  */
 export default class Necklace {
     private readonly ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -137,6 +137,8 @@ export default class Necklace {
                         seqLen: anchorPos[k] - anchorPos[i],
                         sequece: sliced,
                     });
+                    //! 必然是本次循环的最短，所以后面不用测试了
+                    break;
                 }
             }
         }
