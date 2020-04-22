@@ -2,7 +2,7 @@
  * @Author: Kinnon.Z
  * @Date: 2020-04-21 20:00:10
  * @Last Modified by: Kinnon.Z
- * @Last Modified time: 2020-04-21 22:36:10
+ * @Last Modified time: 2020-04-22 10:33:20
  */
 
 export default class FillInNumbers {
@@ -81,11 +81,11 @@ export default class FillInNumbers {
             let combineLen = combine.length;
             for (let i = 0; i < combineLen; ++i) {
                 let pos = combine[i];
-                let tmplete: (number | number[])[] = [zeroCount, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+                let template: (number | number[])[] = [zeroCount, 0, 0, 0, 0, 0, 0, 0, 0, 0];
                 for (let posI = 0; posI < pos.length; ++posI) {
-                    tmplete[pos[posI]] = [...Array(notZeroCount).keys()].map((each) => ++each);
+                    template[pos[posI]] = [...Array(notZeroCount).keys()].map((each) => ++each);
                 }
-                let gen = this._arrayDivision(tmplete);
+                let gen = this._arrayDivision(template);
                 for (let k = 0; k < gen.length; ++k) {
                     if (this._checkMatch(gen[k])) {
                         let endTime = new Date().getTime();
