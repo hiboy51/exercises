@@ -15,7 +15,7 @@ function getVSCodeInfo() {
         process.stderr.on("data", (data: Buffer) => {
             rej(data.toString());
         });
-        process.on("error", e => rej(e.message));
+        process.on("error", (e) => rej(e.message));
     });
 }
 
@@ -39,7 +39,7 @@ function getElectronInfo(url: string) {
             res(matched);
         });
         process.stderr.on("error", (data: Buffer) => console.error(data.toString()));
-        process.on("error", err => rej(err.message));
+        process.on("error", (err) => rej(err.message));
     });
 }
 
@@ -50,14 +50,14 @@ function downLoadElectron(electronVersion: string, arch: string) {
         console.log(`start to download electron`);
         console.log(url);
         let process = spawn("wget", [url, "-O", tmp_path], { stdio: "inherit" });
-        process.on("exit", code => {
+        process.on("exit", (code) => {
             console.log(`code = ${code}`);
             res(tmp_path);
         });
-        process.on("close", code => {
+        process.on("close", (code) => {
             res(tmp_path);
         });
-        process.on("error", err => {
+        process.on("error", (err) => {
             console.log(err.message);
             res();
         });
@@ -105,15 +105,15 @@ function replace_lib() {
         .pipe(Plugins.debug())
         .pipe(
             Plugins.unzip({
-                filter: function(entry) {
+                filter: function (entry) {
                     return M(entry.path, `**/${lib_dir}${lib_name}`);
-                }
+                },
             })
         )
         .pipe(Plugins.errorHandle())
         .pipe(Plugins.debug())
         .pipe(
-            GulpClient.dest(file => {
+            GulpClient.dest((file) => {
                 file.dirname = "";
                 let p = path.join("/Applications", dist_app, lib_dir);
                 console.log(p);
@@ -121,7 +121,7 @@ function replace_lib() {
             })
         )
         .pipe(Plugins.debug())
-        .on("error", e => console.error(e));
+        .on("error", (e) => console.error(e));
 }
 
 async function del_tmp_download() {
