@@ -36,8 +36,10 @@
     "@types/minimatch": "^3.0.3",
     "@types/node": "^13.9.1",
     "@types/vinyl-paths": "0.0.31",
+    "async": "^3.2.0",
     "del": "^5.1.0",
     "minimatch": "^3.0.4",
+    "regenerator-runtime": "^0.13.5",
     "vinyl-paths": "^3.0.1"
   }
 }
