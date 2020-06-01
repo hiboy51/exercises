@@ -26,6 +26,7 @@
     "gulp-error-handle": "^1.0.1",
     "gulp-load-plugins": "^2.0.2",
     "gulp-unzip": "^1.1.0",
+    "prettier": "2.0.5",
     "ts-node": "^8.6.2"
   },
   "dependencies": {
