@@ -21,12 +21,12 @@ let p2 = RootObserve(obj, "ROOT_2");
 let p3 = RootObserve(obj.d, "ROOT_3");
 
 // delete p1.a;
-p1.a = null;
-RootUnObserve("ROOT_2");
-p2.d = {
-    i: 1,
-    f: 2,
-};
+// p1.a = null;
+// RootUnObserve("ROOT_2");
+// p2.d = {
+//     i: 1,
+//     f: 2,
+// };
 // p1.c = { name: "kinnon" };
 // p1.c.kinnon = "123";
 p1.d.dd = {};

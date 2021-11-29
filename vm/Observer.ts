@@ -2,7 +2,7 @@
  * @Author: Kinnon.Z
  * @Date: 2021-11-29 15:05:20
  * @Last Modified by: Kinnon.Z
- * @Last Modified time: 2021-11-29 18:19:31
+ * @Last Modified time: 2021-11-29 18:24:43
  */
 const ModMethods = [
     "push",
@@ -92,8 +92,9 @@ function Observe<T extends { [k: string]: any }>(obj: T, path: string[] = []) {
                         newV: newValue,
                         oldV: oldValue,
                     };
-                    let allProxies = GlobalProxies.get(target);
-                    allProxies.filter((each) => each != receiver);
+                    let allProxies = GlobalProxies.get(target).filter(
+                        (each) => each != receiver
+                    );
                     for (let i = allProxies.length - 1; i >= 0; --i) {
                         let each = allProxies[i];
                         each[field] = newValue;
@@ -133,7 +134,9 @@ function Observe<T extends { [k: string]: any }>(obj: T, path: string[] = []) {
                                 oldV: oldValue,
                             };
                             let allProxies = GlobalProxies.get(target) || [];
-                            allProxies.filter((each) => each != receiver);
+                            allProxies = allProxies.filter(
+                                (each) => each != receiver
+                            );
                             for (let i = allProxies.length - 1; i >= 0; --i) {
                                 let each = allProxies[i];
                                 each[field](args);
