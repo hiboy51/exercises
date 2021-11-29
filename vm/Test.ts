@@ -1,4 +1,4 @@
-import { RootObserve } from "./Observer";
+import { RootObserve, RootUnObserve } from "./Observer";
 
 let obj = {
     a: 1,
@@ -16,16 +16,17 @@ let obj = {
     },
 };
 
-let p1 = RootObserve(obj, ["ROOT_1"]);
-let p2 = RootObserve(obj, ["ROOT_2"]);
-let p3 = RootObserve(obj.d, ["ROOT_3"]);
+let p1 = RootObserve(obj, "ROOT_1");
+let p2 = RootObserve(obj, "ROOT_2");
+let p3 = RootObserve(obj.d, "ROOT_3");
 
 // delete p1.a;
-// p1.a = null;
-// p2.d = {
-//     i: 1,
-//     f: 2,
-// };
+p1.a = null;
+RootUnObserve("ROOT_2");
+p2.d = {
+    i: 1,
+    f: 2,
+};
 // p1.c = { name: "kinnon" };
 // p1.c.kinnon = "123";
 p1.d.dd = {};
@@ -38,8 +39,8 @@ p1.d.dd = {};
 
 // let arrayObj = [1, 2, 3];
 
-// let p1 = RootObserve(arrayObj, ["ROOT_ARRAY_1"]);
-// let p2 = RootObserve(arrayObj, ["ROOT_ARRAY_2"]);
+// let p1 = RootObserve(arrayObj, "ROOT_ARRAY_1");
+// let p2 = RootObserve(arrayObj, "ROOT_ARRAY_2");
 
 // p1[0] = "d";
 // p1.splice(0, 1);
