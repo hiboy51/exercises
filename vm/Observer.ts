@@ -2,7 +2,7 @@
  * @Author: Kinnon.Z
  * @Date: 2021-11-29 15:05:20
  * @Last Modified by: Kinnon.Z
- * @Last Modified time: 2021-11-29 17:13:45
+ * @Last Modified time: 2021-11-29 17:17:58
  */
 const ModMethods = [
     "push",
@@ -31,15 +31,6 @@ function SafeSaveProxy(target, proxy) {
     } else {
         GlobalProxies.set(target, [proxy]);
     }
-}
-
-export function RootObserve<T extends { [k: string]: any }>(
-    obj: T,
-    path: string[] = []
-) {
-    let proxy = Observe(obj, path);
-    SafeSaveProxy(obj, proxy);
-    return proxy;
 }
 
 function Observe<T extends { [k: string]: any }>(obj: T, path: string[] = []) {
@@ -155,5 +146,14 @@ function Observe<T extends { [k: string]: any }>(obj: T, path: string[] = []) {
     };
 
     let proxy = new Proxy(obj, proxyHandler);
+    return proxy;
+}
+
+export function RootObserve<T extends { [k: string]: any }>(
+    obj: T,
+    path: string[] = []
+) {
+    let proxy = Observe(obj, path);
+    SafeSaveProxy(obj, proxy);
     return proxy;
 }
