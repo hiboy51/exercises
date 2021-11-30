@@ -14,7 +14,9 @@ const ModMethods = [
     "splice",
 ];
 type RootPath = string;
-let GlobalProxies: Map<{}, [RootPath, {}][]> = new Map();
+type TargetSource = {};
+type TargetProxy = {};
+let GlobalProxies: Map<TargetSource, [RootPath, TargetProxy][]> = new Map();
 let DispatchingMedium: { oldV: any; newV: any } = null;
 
 function VMNotify(newV: any, oldV: any, path: string[]) {
