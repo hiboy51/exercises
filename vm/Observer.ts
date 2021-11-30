@@ -13,9 +13,9 @@ const ModMethods = [
     "reverse",
     "splice",
 ];
-let GlobalProxies: Map<{}, {}[]> = new Map();
+type RootPath = string;
+let GlobalProxies: Map<{}, [RootPath, {}][]> = new Map();
 let DispatchingMedium: { oldV: any; newV: any } = null;
-let ObservingPaths: Set<string> = new Set();
 
 function VMNotify(newV: any, oldV: any, path: string[]) {
     //TODO
@@ -26,11 +26,11 @@ function VMNotify(newV: any, oldV: any, path: string[]) {
     );
 }
 
-function SafeSaveProxy(target, proxy) {
+function SafeSaveProxy(target, rootPath, proxy) {
     if (GlobalProxies.has(target)) {
-        GlobalProxies.get(target).push(proxy);
+        GlobalProxies.get(target).push([rootPath, proxy]);
     } else {
-        GlobalProxies.set(target, [proxy]);
+        GlobalProxies.set(target, [[rootPath, proxy]]);
     }
 }
 
@@ -39,8 +39,9 @@ function Observe<T extends { [k: string]: any }>(obj: T, path: string[] = []) {
         key = String(key);
         let target = Reflect.get(obj, key);
         if (typeof target == "object" && target != null) {
-            let p = Observe(target, [...path, key]);
-            SafeSaveProxy(target, p);
+            let curPath = [...path, key];
+            let p = Observe(target, curPath);
+            SafeSaveProxy(target, curPath.join("."), p);
         }
     });
 
@@ -65,7 +66,7 @@ function Observe<T extends { [k: string]: any }>(obj: T, path: string[] = []) {
                         GlobalProxies.delete(oldValue);
                     }
                     let np = Observe(newValue, route);
-                    SafeSaveProxy(newValue, np);
+                    SafeSaveProxy(newValue, route.join("."), np);
                 } else if (
                     typeof oldValue == "object" &&
                     oldValue != null &&
@@ -78,27 +79,24 @@ function Observe<T extends { [k: string]: any }>(obj: T, path: string[] = []) {
                     newValue != null
                 ) {
                     let np = Observe(newValue, route);
-                    SafeSaveProxy(newValue, np);
+                    SafeSaveProxy(newValue, route.join("."), np);
                 }
-                if (ObservingPaths.has(route[0])) {
-                    VMNotify(newValue, oldValue, route);
-                } else {
-                    let allProxies = GlobalProxies.get(target);
-                    allProxies.splice(allProxies.indexOf(receiver), 1);
-                }
+                VMNotify(newValue, oldValue, route);
                 if (!DispatchingMedium) {
                     Reflect.set(target, field, newValue);
                     DispatchingMedium = {
                         newV: newValue,
                         oldV: oldValue,
                     };
-                    let allProxies = GlobalProxies.get(target).filter(
-                        (each) => each != receiver
-                    );
-                    for (let i = allProxies.length - 1; i >= 0; --i) {
-                        let each = allProxies[i];
-                        each[field] = newValue;
-                    }
+                    GlobalProxies.get(target)
+                        .filter((each) => {
+                            let [, p] = each;
+                            return p != receiver;
+                        })
+                        .forEach((v, k) => {
+                            let [, p] = v;
+                            p[field] = newValue;
+                        });
                     DispatchingMedium = null;
                 }
             }
@@ -122,25 +120,22 @@ function Observe<T extends { [k: string]: any }>(obj: T, path: string[] = []) {
                         oldValue.length != newValue.length ||
                         newValue.some((each, idx) => each != oldValue[idx]);
                     if (changed) {
-                        if (ObservingPaths.has(route[0])) {
-                            VMNotify(newValue, oldValue, route);
-                        } else {
-                            let allProxies = GlobalProxies.get(target) || [];
-                            allProxies.splice(allProxies.indexOf(receiver), 1);
-                        }
+                        VMNotify(newValue, oldValue, route);
                         if (!DispatchingMedium) {
                             DispatchingMedium = {
                                 newV: newValue,
                                 oldV: oldValue,
                             };
                             let allProxies = GlobalProxies.get(target) || [];
-                            allProxies = allProxies.filter(
-                                (each) => each != receiver
-                            );
-                            for (let i = allProxies.length - 1; i >= 0; --i) {
-                                let each = allProxies[i];
-                                each[field](args);
-                            }
+                            allProxies
+                                .filter((each) => {
+                                    let [, p] = each;
+                                    return p != receiver;
+                                })
+                                .forEach((v, k) => {
+                                    let [, p] = v;
+                                    p[field](args);
+                                });
                             DispatchingMedium = null;
                         }
                     }
@@ -149,14 +144,14 @@ function Observe<T extends { [k: string]: any }>(obj: T, path: string[] = []) {
             let result = Reflect.get(target, field);
             if (typeof result == "object" && result != null) {
                 if (GlobalProxies.get(result)?.length > 0) {
-                    return GlobalProxies.get(result)[0];
+                    return GlobalProxies.get(result)[0][1];
                 }
             }
             return Reflect.get(target, field);
         },
         deleteProperty: function (target, field) {
             let allProxies = GlobalProxies.get(target) || [];
-            allProxies.forEach((each) => (each[field] = undefined));
+            allProxies.forEach((each) => (each[1][field] = undefined));
             return true;
         },
     };
@@ -170,11 +165,19 @@ export function RootObserve<T extends { [k: string]: any }>(
     root: string
 ) {
     let proxy = Observe(obj, [root]);
-    SafeSaveProxy(obj, proxy);
-    ObservingPaths.add(root);
+    SafeSaveProxy(obj, root, proxy);
     return proxy;
 }
 
 export function RootUnObserve(rootPath: string) {
-    ObservingPaths.delete(rootPath);
+    let i = 0,
+        path = "";
+    GlobalProxies.forEach((v, k) => {
+        for (i = v.length - 1; i >= 0; --i) {
+            [path] = v[i];
+            if (path.startsWith(rootPath)) {
+                v.splice(i, 1);
+            }
+        }
+    });
 }

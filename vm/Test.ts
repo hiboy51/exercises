@@ -20,9 +20,14 @@ let p1 = RootObserve(obj, "ROOT_1");
 let p2 = RootObserve(obj, "ROOT_2");
 let p3 = RootObserve(obj.d, "ROOT_3");
 
-// delete p1.a;
+delete p1.a;
 // p1.a = null;
 // RootUnObserve("ROOT_2");
+// p2 = RootObserve(obj, "ROOT_2");
+// RootUnObserve("ROOT_2");
+// p2 = RootObserve(obj, "ROOT_2");
+
+// RootUnObserve("ROOT_3");
 // p2.d = {
 //     i: 1,
 //     f: 2,
