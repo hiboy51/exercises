@@ -37,7 +37,7 @@
     "@types/minimatch": "^3.0.3",
     "@types/node": "^13.9.1",
     "@types/vinyl-paths": "0.0.31",
-    "async": "^3.2.0",
+    "async": "^3.2.2",
     "del": "^5.1.0",
     "intl": "^1.2.5",
     "minimatch": "^3.0.4",
